@@ -10,6 +10,10 @@ The code was built for performance on Python3.13, though some backwards compatab
 ```bash
 pip install astropy numpy matplotlib photutils
 ```
+OR
+```bash
+pip install -r requirements.txt
+```
 ### Bash/cmd
 ```bash
 python3 main.py /path/to/file.fits
