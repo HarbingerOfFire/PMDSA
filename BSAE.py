@@ -82,7 +82,7 @@ def analyze_binary_star(fits_file, plot=False):
 
         # --- 2D Zoomed-in Plot ---
         plt.figure()  # Open a new figure window
-        img=plt.imshow(zoomed_data, cmap='gray', origin='lower')
+        img=plt.imshow(zoomed_data, cmap='binary', origin='lower')
         plt.colorbar(img, label='Pixel Intensity')  # Pass the variable to colorbar
         plt.scatter([x1 - x_min, x2 - x_min], [y1 - y_min, y2 - y_min], color='red', s=10, label='Detected Stars')
         plt.title(f"Image of System {os.path.basename(os.path.dirname(fits_file))}")
@@ -96,7 +96,10 @@ def analyze_binary_star(fits_file, plot=False):
         ax = fig.add_subplot(111, projection='3d')
 
         X, Y = np.meshgrid(np.arange(zoomed_data.shape[1]), np.arange(zoomed_data.shape[0]))
-        ax.plot_surface(X, Y, zoomed_data, cmap='inferno', edgecolor=None)
+        surf=ax.plot_surface(X, Y, zoomed_data, cmap='inferno', edgecolor=None)
+
+        # Add colorbar
+        fig.colorbar(surf, ax=ax, shrink=0.5, aspect=10, label="Intensity")
 
         ax.set_title(f"3D Surface Plot of System {os.path.basename(os.path.dirname(fits_file))}")
         ax.set_xlabel("X (pixels)")
