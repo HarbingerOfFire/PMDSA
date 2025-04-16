@@ -1,5 +1,5 @@
-# BinaryStarAnalysisExample
-AstroPY Example for Binary Star Analysis of FITS files
+# PMDSA
+Photometric Method for Double Star Analysis: an AstroPY Example
 
 ## BACKGROUND
 This code is used to analyze basic information of binary star systems. Please note that there are some bugs in this code, that can make some values be very far off, but the median and mean values are generally within ()% of the accepted values. The code as is, provides the system's Seperation (Arcseconds), Position Angle (degrees), and Difference in Magnitude (Delta Mag)
@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ```
 ### Bash/cmd
 ```bash
-python3 main.py /path/to/file.fits
+python3 PMDSA.py /path/to/file.fits
 ```
 To batch run this program use `run.sh` in bash
 ```bash
@@ -40,6 +40,6 @@ The writing of this code was tested using data provided in the NSF's Four Corner
 
 ### Citations:
 If you use this code for the analysis of your code, please include the following insert as an acknowledgment and please reach out to me so we can show your published work here. Please also add acknowledgments to Astropy, Numpy, and Matplotlib
->>Analysis used in this publication was assissted in whole or part by the Binary Star Analysis Example provided by HarbingerOfFire on github (https://github.com/harbingeroffire/BinaryStarAnalysisExample)
+>>Analysis used in this publication was assissted in whole or part by PMDSA  provided by HarbingerOfFire on github (https://github.com/harbingeroffire/PMDSA)
 
 Past works include:
