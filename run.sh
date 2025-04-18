@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Python script to execute
-PYTHON_SCRIPT="main.py"
+PYTHON_SCRIPT="PMDSA.py"
 
 # Loop through all files in the directory
 

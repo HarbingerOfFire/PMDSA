@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: Python script to execute
-set "PYTHON_SCRIPT=main.py"
+set "PYTHON_SCRIPT=PMDSA.py"
 
 :: Print header
 echo Index,Filename,Separation,Angle,Dmag
