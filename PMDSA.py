@@ -77,20 +77,23 @@ def isolate_binary(fits_file: fits.FITS, sources):
 ############
 if __name__=='__main__':
     
+    #Load Header and WCS from File
     FILE = open(sys.argv[1], 'rb')
     fits_file = fits.FITS(FILE)
 
-    #show_2d_image(fits_file.data, fits_file)
+    #optional generate image
+    show_2d_image(fits_file.data, fits_file)
 
+    #Identify Stars and Gather Flux information
     sources = find_stars(fits_file)
+
+    #Determine (X,Y) coordinates
     star1, star2 = isolate_binary(fits_file, sources)
 
+    #Determine Position Angle, Seperation, and Differenetial Magnitude
     m= measure(fits_file.wcs)
-
     sep = m.separation(star1, star2)
-
     angle = m.position_angle(star1, star2)
-
     dmag = m.delta_mag(star1, star2)
 
     print(f"{sep:.2f},{angle:.2f},{dmag:.2f}")
