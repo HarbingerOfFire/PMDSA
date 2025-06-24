@@ -8,7 +8,7 @@ This code is used to analyze basic information of binary star systems. Please no
 The code was built for performance on Python3.13, though some backwards compatability likely exists up to a certain point.
 ### Requirements
 ```bash
-pip install numpy photutils
+pip install numpy
 ```
 OR
 ```bash
@@ -27,6 +27,12 @@ or `run.bat` for cmd
 ./run.bat /path/to/fits/directory
 ```
 
+If you don't have your target centered in your images, I suggest adding the RA and DEC (in degrees) to the python command like
+```bash
+python3 PMDSA.py /path/to/file.fits deg_RA deg_DEC
+```
+
+
 ## NOTES
 Images must be plate-solved with WCS values available in the FITS header. My recommendation is to use [astrometry.net](https://nova.astrometry.net)
 
@@ -35,10 +41,12 @@ The output of the function is in a CSV format in the order Seperation,PositionAn
 ### Acknowledgments:
 Special Thanks to [Numpy](https://github.com/numpy/numpy) and [Matplotlib](https://github.com/matplotlib/matplotlib)
 
-The writing of this code was tested using data provided in the NSF's Four Corners Student Research Consortium funded by NSF grant NSF#2428684
+The writing of this code was tested using data provided in the NSF's Four Corners Student Research Consortium funded by NSF grant NSF#2428684 and data from Dimension Point observatory.
 
 ### Citations:
 If you use this code for the analysis of your code, please include the following insert as an acknowledgment and please reach out to me so we can show your published work here. 
 >>Analysis used in this publication was assissted in whole or part by PMDSA  provided by HarbingerOfFire on github (https://github.com/harbingeroffire/PMDSA)
 
 Past works include:
+
+Syfrett et. Al.  "Comparative Analysis of Two Astrometric Measuring Methods on Five Known Binaries"  *Journal of Double Star Observations* Pending Publishing, April 30th. 2025.
