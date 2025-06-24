@@ -5,7 +5,7 @@ from . import edge
 
 ''''''
 
-def median_filter_numpy(arr, size):
+def median_filter_numpy(arr, size=3):
     """    Apply a median filter to a 2D numpy array using sliding window view.
     Parameters:
         arr (np.ndarray): Input 2D array.
@@ -41,7 +41,7 @@ class StarFinder:
         Returns:
             np.ndarray: Coordinates of detected stars.
         """
-        filtered = median_filter_numpy(image, self.window_size)
+        filtered = median_filter_numpy(image)
         ed = edge.EdgeDetector(sigma=self.sigma)
         edges_grad = ed.detect_edges(filtered)
 
