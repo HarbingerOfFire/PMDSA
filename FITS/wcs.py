@@ -9,6 +9,18 @@
 # LINK TO WCS FORMAT (GITHUB):
 # https://danmoser.github.io/notes/gai_fits-imgs.html
 
+#This class implements a basic linear WCS transform based on:
+#  - Greisen & Calabretta (2002), A&A 395, 1061–1075
+#  - Calabretta & Greisen (2002), A&A 395, 1077–1122
+#and the IAU FITS Standard Version 4.0.
+
+#References:
+#  https://doi.org/10.1051/0004-6361:20021326
+#  https://doi.org/10.1051/0004-6361:20021327
+#  https://www.aanda.org/articles/aa/pdf/2002/45/aah3859.pdf
+#  https://www.aanda.org/articles/aa/pdf/2002/45/aah3860.pdf
+#  https://fits.gsfc.nasa.gov/fits_wcs.html
+
 '''
 ATTRIBUTES
 

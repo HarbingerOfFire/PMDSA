@@ -116,7 +116,9 @@ class FITS:
         self.data=self.file.read(bytepix*width*height)
         self.data=self._binary_to_array(self.data, int(self.header["BITPIX"])//8, int(self.header["NAXIS1"]), int(self.header["NAXIS2"]))
         if self.ensure_header_value("BSCALE") and self.ensure_header_value("BZERO"):
-            self.data = (self.data * int(self.header["BSCALE"]))+int(self.header["BZERO"])
+            bscale = float(self.header["BSCALE"])
+            bzero = float(self.header["BZERO"])
+            self.data = (self.data * int(bscale))+int(bzero)
         return self.data
         
     def __del__(self):

@@ -24,6 +24,8 @@ class Star:
     x: float
     y: float
     flux: float
+    aperture_radius: float = 0.0 
+    distance: float = 0.0 
 
     def __repr__(self):
         return f"Star(x={self.x}, y={self.y}, flux={self.flux})"
