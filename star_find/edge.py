@@ -16,9 +16,7 @@ class EdgeDetector:
 
     def detect_edges(self, image: np.ndarray) -> np.ndarray:
         """
-        Detect edges by:
-        - method='gradient': finite difference magnitude after Gaussian blur
-        - method='laplacian': Laplacian of Gaussian (second derivative)
+        Detect edges in the given image using Gaussian blur and gradient magnitude.
         """
         size = 2 * int(3 * self.sigma) + 1
         kernel = self.blur.gaussian_kernel(size)
