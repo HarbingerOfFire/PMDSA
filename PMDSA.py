@@ -1,12 +1,7 @@
-from photutils.detection import DAOStarFinder
-from stats import sigma_clipped_stats
 from measure import measure, Star
-import matplotlib.pyplot as plt
 from star_find import find
 from FITS import fits
-import numpy as np
 import sys
-import os
 
 
 ############

@@ -45,7 +45,7 @@ SKY_ANGLE: Get the angle of the sky in degrees (atan2(CD2_1, CD1_1)) (Sets CROTA
 SKY_SCALE: Get the scale of the sky in degrees per pixel (Sets CDELT1 and CDELT2)
 '''
 
-from math import atan2, degrees, radians, cos, sin
+from math import atan2, degrees, radians, cos
 
 class WCS:
     def __init__(self, header):

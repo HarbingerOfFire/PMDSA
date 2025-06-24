@@ -1,7 +1,7 @@
 from numpy.lib.stride_tricks import sliding_window_view
+import matplotlib.pyplot as plt
 import numpy as np
 from . import edge
-import matplotlib.pyplot as plt
 
 ''''''
 
