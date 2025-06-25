@@ -22,9 +22,11 @@ class EdgeDetector:
         kernel = self.blur.gaussian_kernel(size)
         blurred = self.blur.apply(image, kernel)
 
-        # Approximate gradient magnitude
-        kernel_dx = np.array([[1, 0, -1]])
+        kernel_dx = np.array([[1, 0, -1],
+                        [2, 0, -2],
+                        [1, 0, -1]])
         kernel_dy = kernel_dx.T
+
         grad_x = self.blur.apply(blurred, kernel_dx)
         grad_y = self.blur.apply(blurred, kernel_dy)
         edges = np.hypot(grad_x, grad_y)
