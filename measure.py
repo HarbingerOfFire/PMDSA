@@ -28,7 +28,7 @@ class Star:
     distance: float = 0.0 
 
     def __repr__(self):
-        return f"Star(x={self.x}, y={self.y}, flux={self.flux})"
+        return f"Star(x={self.x}, y={self.y}, flux={self.flux}, radius={self.aperture_radius}, distance={self.distance})\n"
 
 class measure:
     """

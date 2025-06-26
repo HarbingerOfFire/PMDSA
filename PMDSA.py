@@ -37,7 +37,11 @@ if __name__=='__main__':
 
     # Convert stars to Star objects
     # Assuming stars is a list of tuples (x, y, flux, aperture_radius, distance)
-    star1, star2 = (Star(x, y, flux, aperture_radius, distance) for x, y, flux, aperture_radius, distance in stars[:2])    
+    star1, star2 = (Star(x, y, flux, aperture_radius, distance) for x, y, flux, aperture_radius, distance in stars[:2]) 
+    
+    # Ensure star1 is the brighter star
+    if star1.flux < star2.flux:
+        star1, star2 = star2, star1   
 
     #Determine Position Angle, Seperation, and Differenetial Magnitude
     m= measure(fits_file.wcs)
