@@ -46,6 +46,7 @@ SKY_SCALE: Get the scale of the sky in degrees per pixel (Sets CDELT1 and CDELT2
 '''
 
 from math import atan2, degrees, radians, cos
+import numpy as np
 
 class WCS:
     def __init__(self, header):
@@ -130,9 +131,11 @@ class WCS:
         Returns:
             tuple[float]: the pixel coordinate of the cooresponding RA/DEC as (x,y)
         """
-        pix_x = (RA - self.CRVAL1) / self.CDELT1 + self.CRPIX1
-        pix_y = (Dec - self.CRVAL2) / self.CDELT2 + self.CRPIX2
-        return pix_x, pix_y
+        delta_world = np.array([RA-self.CRVAL1, Dec-self.CRVAL2])
+        CD_inv = np.linalg.inv(np.array(self.WCS))
+        delta_pix = CD_inv @ delta_world
+        pixel_coords = delta_pix + np.array([self.CRPIX1, self.CRPIX2])
+        return pixel_coords[0], pixel_coords[1]
     
     def pixel_to_world(self, Pixel_x: float, Pixel_y:float): 
         """
@@ -146,9 +149,11 @@ class WCS:
         Returns: 
             tuple[float]: the (RA, DEC) of the pixel coordinate
         """
-        RA  = (Pixel_x - self.CRPIX1)*self.CDELT1 + self.CRVAL1
-        DEC = (Pixel_y - self.CRPIX2)*self.CDELT2 + self.CRVAL2
-        return RA, DEC
+        delta_pix = np.array([Pixel_x - self.CRPIX1, Pixel_y - self.CRPIX2])
+        CD = np.array(self.WCS)
+        delta_world = CD @ delta_pix
+        RA_DEC = np.array([self.CRVAL1, self.CRVAL2]) + delta_world
+        return RA_DEC[0], RA_DEC[1]
 
 
 ##################################

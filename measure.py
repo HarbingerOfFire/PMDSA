@@ -89,7 +89,8 @@ class measure:
             sin(d_alpha),
             cos(delta1) * tan(delta2) - sin(delta1) * cos(d_alpha)
         )
-
+        if theta < 0:
+            theta += 2 * np.pi
         return degrees(theta)
 
     def separation(self, star1: Star,star2: Star) -> float:
