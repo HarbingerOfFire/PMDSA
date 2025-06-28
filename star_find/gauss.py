@@ -20,6 +20,7 @@ class GaussianBlur:
         ax = np.linspace(-(size // 2), size // 2, size)
         xx, yy = np.meshgrid(ax, ax)
         kernel = np.exp(-(xx**2 + yy**2) / (2. * self.sigma**2))
+        kernel = kernel / (2 * np.pi * self.sigma**2)
         return kernel / np.sum(kernel)
 
     def apply(self, image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
