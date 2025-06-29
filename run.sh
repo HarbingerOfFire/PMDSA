@@ -3,21 +3,29 @@
 # Python script to execute
 PYTHON_SCRIPT="PMDSA.py"
 
-# Loop through all files in the directory
+# Check that at least a directory was passed
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <directory> [extra python args]"
+    exit 1
+fi
 
+# Extract the first argument as the directory
+INPUT_DIR="$1"
+
+# Shift so that "$@" now contains only the extra arguments
+shift
+
+# Header
 echo "Index,Filename,Seperation,Angle,Dmag"
 
 COUNT=0
-for FILE in "$1"/*; do
-    # Extract just the filename
+for FILE in "$INPUT_DIR"/*; do
     FILENAME=$(basename "$FILE")
     
-    # Execute the Python script with the file as an argument and capture the output
-    OUTPUT=$(python3 "$PYTHON_SCRIPT" "$FILE")
+    # Run python script with FILE and any extra args
+    OUTPUT=$(python3 "$PYTHON_SCRIPT" "$FILE" "$@")
     
-    # Print the file number, filename, and Python output separated by commas
     echo "$COUNT,$FILENAME,$OUTPUT"
     
-    # Increment file count
     ((COUNT++))
 done

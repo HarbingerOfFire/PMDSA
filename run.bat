@@ -1,26 +1,33 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Python script to execute
-set "PYTHON_SCRIPT=PMDSA.py"
+:: Check for at least one argument
+if "%~1"=="" (
+    echo Usage: %~nx0 ^<directory^> [extra python args]
+    exit /b 1
+)
 
-:: Print header
-echo Index,Filename,Separation,Angle,Dmag
+:: First argument is the input directory
+set "INPUT_DIR=%~1"
+shift /1
 
-:: Initialize counter
+:: Collect all extra arguments into a single variable
+set "EXTRA_ARGS="
+:loop
+shift /1
+if "%~1"=="" goto start_loop
+set "EXTRA_ARGS=!EXTRA_ARGS! %~1"
+goto loop
+
+:start_loop
+echo Index,Filename,Seperation,Angle,Dmag
+
 set COUNT=0
-
-:: Loop through all files in the specified directory
-for %%F in ("%~1\*") do (
+for %%F in ("%INPUT_DIR%\*") do (
     set "FILENAME=%%~nxF"
-    
-    :: Execute the Python script with the file as an argument and capture the output
-    for /f "delims=" %%O in ('python "%PYTHON_SCRIPT%" "%%F"') do set "OUTPUT=%%O"
-
-    :: Print the file number, filename, and Python output separated by commas
-    echo !COUNT!,!FILENAME!,!OUTPUT!
-
-    :: Increment counter
+    for /f "delims=" %%O in ('python PMDSA.py "%%F"!EXTRA_ARGS!') do (
+        echo !COUNT!,!FILENAME!,%%O
+    )
     set /a COUNT+=1
 )
 
