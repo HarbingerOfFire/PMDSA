@@ -50,7 +50,7 @@ if __name__=='__main__':
     dmag = m.delta_mag(star1, star2)
 
     # plot the stars on the image (make true to see the plot)
-    while False:
+    if False:
         star_find.plot_star_zoom(fits_file.data, star1)
         star_find.plot_star_zoom_3d(fits_file.data, star1)
 
