@@ -193,7 +193,7 @@ class StarFinder:
         plt.axis('on')
         plt.show()
 
-    def plot_star_zoom_3d(self, image, star, zoom_factor=4, title="Star Zoom 3D"):
+    def plot_star_zoom_3d(self, image, star, zoom_factor=5, title="Star Zoom 3D"):
         """
         Plot a 3D surface zoomed-in region around a star.
 
