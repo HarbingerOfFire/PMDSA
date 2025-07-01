@@ -166,7 +166,7 @@ class StarFinder:
         self.stars.sort(key=lambda star: star[4])  # Sort by distance
         return self.stars
 
-    def plot_star_zoom(self, image, star, zoom_factor=4, title="Star Zoom"):
+    def plot_star_zoom(self, image, star, zoom_factor=5, title="Star Zoom"):
         """
         Plot a zoomed-in region around a star.
 
