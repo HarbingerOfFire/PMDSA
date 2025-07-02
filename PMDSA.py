@@ -51,7 +51,7 @@ if __name__=='__main__':
 
     # plot the stars on the image (make true to see the plot)
     if False:
-        star_find.plot_star_zoom(fits_file.data, star1)
-        star_find.plot_star_zoom_3d(fits_file.data, star1)
+        star_find.plot_star_zoom(fits_file.data, star1, zoom_factor=15)
+        star_find.plot_star_zoom_3d(fits_file.data, star1, zoom_factor=15)
 
     print(f"{sep:.2f},{angle:.2f},{dmag:.2f}")

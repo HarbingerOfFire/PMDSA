@@ -69,9 +69,11 @@ class FITS:
         Returns:
             np.ndarray: The reshaped array.
         """
-      
         # Convert binary data to numpy array
-        array = np.frombuffer(binary_data, dtype=f">u{bpix}")
+        if bpix*8 in [8,16]:
+            array = np.frombuffer(binary_data, dtype=f">u{bpix}")
+        elif bpix*8 in [32,64]:
+            array = np.frombuffer(binary_data, dtype=f">i{bpix}")
         
         # Reshape into 2D array
         return array.reshape((NAXIS2, NAXIS1))
@@ -96,7 +98,7 @@ class FITS:
                     self.history.append(line)
                 pass
         assert self.header["SIMPLE"] == "T", "Not a FITS file"
-        assert int(self.header["BITPIX"]) in [8, 16, 32, 64], "Unsupported BITPIX value"
+        assert int(self.header["BITPIX"]) in [8, 16, -32, -64], "Unsupported BITPIX value"
         assert int(self.header["NAXIS"]) == 2, "Only 2D images supported"
         assert int(self.header["NAXIS1"]) > 0 and int(self.header["NAXIS2"]) > 0, "Invalid image dimensions"
         self.wcs=wcs.WCS(self.header)
@@ -109,13 +111,13 @@ class FITS:
         self.file.seek(blockEnd)
 
         #####RETRIEVE DATA AND CONVERT TO ARRAY#####
-        bytepix=int(self.header["BITPIX"])//8
+        bytepix=abs(int(self.header["BITPIX"])//8)
         width=int(self.header["NAXIS1"])
         height=int(self.header["NAXIS2"])
 
         self.data=self.file.read(bytepix*width*height)
-        self.data=self._binary_to_array(self.data, int(self.header["BITPIX"])//8, int(self.header["NAXIS1"]), int(self.header["NAXIS2"]))
-        if self.ensure_header_value("BSCALE") and self.ensure_header_value("BZERO"):
+        self.data=self._binary_to_array(self.data, abs(int(self.header["BITPIX"]))//8, int(self.header["NAXIS1"]), int(self.header["NAXIS2"]))
+        if self.ensure_header_value("BSCALE") and self.ensure_header_value("BZERO") and bytepix < 4:
             bscale = float(self.header["BSCALE"])
             bzero = float(self.header["BZERO"])
             self.data = (self.data * int(bscale))+int(bzero)
