@@ -3,29 +3,39 @@
 # Python script to execute
 PYTHON_SCRIPT="PMDSA.py"
 
-# Check that at least a directory was passed
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <directory> [extra python args]"
+# Ensure at least directory is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <root_directory> [extra python args]"
     exit 1
 fi
 
-# Extract the first argument as the directory
-INPUT_DIR="$1"
-
-# Shift so that "$@" now contains only the extra arguments
+ROOT_DIR="$1"
 shift
 
-# Header
-echo "Index,Filename,Seperation,Angle,Dmag"
+find "$ROOT_DIR" -type d | while read -r SUBDIR; do
+    shopt -s nullglob
+    FILES=("$SUBDIR"/*)
+    shopt -u nullglob
 
-COUNT=0
-for FILE in "$INPUT_DIR"/*; do
-    FILENAME=$(basename "$FILE")
-    
-    # Run python script with FILE and any extra args
-    OUTPUT=$(python3 "$PYTHON_SCRIPT" "$FILE" "$@")
-    
-    echo "$COUNT,$FILENAME,$OUTPUT"
-    
-    ((COUNT++))
+    if [ ${#FILES[@]} -eq 0 ]; then continue; fi
+
+    # Safe subdir name for CSV (relative path with slashes replaced)
+    RELATIVE_NAME="${SUBDIR#$ROOT_DIR/}"
+    CSV_NAME=$(echo "${RELATIVE_NAME:-$(basename "$ROOT_DIR")}")
+    CSV_FILE="${CSV_NAME}.csv"
+
+    echo "Writing to $CSV_FILE from $SUBDIR"
+
+    # Write header
+    echo "Index,Filename,Seperation,Angle,Dmag" > "$CSV_FILE"
+
+    COUNT=0
+    for FILE in "${FILES[@]}"; do
+        if [ -f "$FILE" ]; then
+            FILENAME=$(basename "$FILE")
+            OUTPUT=$(python3 "$PYTHON_SCRIPT" "$FILE" "$@")
+            echo "$COUNT,$FILENAME,$OUTPUT" >> "$CSV_FILE"
+            ((COUNT++))
+        fi
+    done
 done

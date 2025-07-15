@@ -18,20 +18,19 @@ pip install -r requirements.txt
 ```bash
 python3 PMDSA.py /path/to/file.fits
 ```
-To batch run this program use `run.sh` in bash
-```bash
-./run.sh /path/to/fits/directory
-```
-or `run.bat` for cmd
-```cmd
-./run.bat /path/to/fits/directory
-```
-
 If you don't have your target centered in your images, I suggest adding the RA and DEC (in degrees) to the python command like
 ```bash
 python3 PMDSA.py /path/to/file.fits deg_RA deg_DEC
 ```
-
+To batch run this program use `run.sh` in bash
+```bash
+./run.sh /path/to/fits/directory [deg_RA] [deg_DEC]
+```
+or `run.bat` for cmd
+```cmd
+./run.bat /path/to/fits/directory [deg_RA] [deg_DEC]
+```
+These shell scripts write the outputs to CSV and can handle multiple targets in different subdirectories if needed.
 
 ## NOTES
 Images must be plate-solved with WCS values available in the FITS header. My recommendation is to use [astrometry.net](https://nova.astrometry.net)

@@ -1,34 +1,44 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Check for at least one argument
+set PYTHON_SCRIPT=PMDSA.py
+
 if "%~1"=="" (
-    echo Usage: %~nx0 ^<directory^> [extra python args]
+    echo Usage: %~nx0 ^<root_directory^> [extra python args]
     exit /b 1
 )
 
-:: First argument is the input directory
-set "INPUT_DIR=%~1"
-shift /1
+set ROOT_DIR=%~1
+shift
+set PY_ARGS=%*
 
-:: Collect all extra arguments into a single variable
-set "EXTRA_ARGS="
-:loop
-shift /1
-if "%~1"=="" goto start_loop
-set "EXTRA_ARGS=!EXTRA_ARGS! %~1"
-goto loop
+:: === Recurse into subdirs ===
+for /r "%ROOT_DIR%" %%D in (.) do (
+    pushd "%%D" >nul
 
-:start_loop
-echo Index,Filename,Seperation,Angle,Dmag
+    set "SUBDIR=%%~fD"
+    set "BASENAME=%%~nxD"
+    set "CSV_NAME=!SUBDIR:%ROOT_DIR%=!"
+    if "!CSV_NAME!"=="" set "CSV_NAME=!BASENAME!"
+    set "CSV_FILE=!CSV_NAME!.csv"
 
-set COUNT=0
-for %%F in ("%INPUT_DIR%\*") do (
-    set "FILENAME=%%~nxF"
-    for /f "delims=" %%O in ('python PMDSA.py "%%F"!EXTRA_ARGS!') do (
-        echo !COUNT!,!FILENAME!,%%O
+    :: Clean previous file if exists
+    > "!CSV_FILE!" echo Index,Filename,Seperation,Angle,Dmag
+
+    set /a COUNT=0
+
+    for %%F in (*.*) do (
+        if exist "%%F" (
+            set "FILENAME=%%~nxF"
+            for /f "delims=" %%O in ('python "%PYTHON_SCRIPT%" "%%~fF" %PY_ARGS%') do (
+                set "LINE=!COUNT!,!FILENAME!,%%O"
+                >> "!CSV_FILE!" echo !LINE!
+                set /a COUNT+=1
+            )
+        )
     )
-    set /a COUNT+=1
+
+    popd >nul
 )
 
 endlocal
