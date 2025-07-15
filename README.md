@@ -18,7 +18,11 @@ pip install -r requirements.txt
 ```bash
 python3 PMDSA.py /path/to/file.fits
 ```
-If you don't have your target centered in your images, I suggest adding the RA and DEC (in degrees) to the python command like
+or gui with
+```bash
+python3 gui.py
+```
+If you don't have your target centered in your images, I suggest adding the RA and DEC (in degrees) in the gui or to the python command like
 ```bash
 python3 PMDSA.py /path/to/file.fits deg_RA deg_DEC
 ```
