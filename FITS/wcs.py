@@ -45,28 +45,45 @@ SKY_ANGLE: Get the angle of the sky in degrees (atan2(CD2_1, CD1_1)) (Sets CROTA
 SKY_SCALE: Get the scale of the sky in degrees per pixel (Sets CDELT1 and CDELT2)
 '''
 
-from math import atan2, degrees, radians, cos
+from dataclasses import dataclass, field
+from math import atan2, degrees, cos, radians
 import numpy as np
 
+@dataclass
 class WCS:
-    def __init__(self, header):
-        self.header = header
-        self.CD1_1 = float(header['CD1_1'])
-        self.CD1_2 = float(header['CD1_2'])
-        self.CD2_1 = float(header['CD2_1'])
-        self.CD2_2 = float(header['CD2_2'])
+    header: dict
+    CD1_1: float = field(init=False)
+    CD1_2: float = field(init=False)
+    CD2_1: float = field(init=False)
+    CD2_2: float = field(init=False)
+    WCS: list = field(init=False)
+    CTYPE1: str = field(init=False)
+    CTYPE2: str = field(init=False)
+    CRPIX1: float = field(init=False)
+    CRPIX2: float = field(init=False)
+    CRVAL1: float = field(init=False)
+    CRVAL2: float = field(init=False)
+    CROTA2: float = field(init=False)
+    CDELT1: float = field(init=False)
+    CDELT2: float = field(init=False)
 
-        self.WCS = [[self.CD1_1, self.CD1_2], 
-                   [self.CD2_1, self.CD2_2]]
+    def __post_init__(self):
+        h = self.header
+        self.CD1_1 = float(h['CD1_1'])
+        self.CD1_2 = float(h['CD1_2'])
+        self.CD2_1 = float(h['CD2_1'])
+        self.CD2_2 = float(h['CD2_2'])
 
-        self.CTYPE1 = header['CTYPE1']
-        self.CTYPE2 = header['CTYPE2']
+        self.WCS = [[self.CD1_1, self.CD1_2],
+                    [self.CD2_1, self.CD2_2]]
 
-        self.CRPIX1 = float(header['CRPIX1'])
-        self.CRPIX2 = float(header['CRPIX2'])
+        self.CTYPE1 = h['CTYPE1']
+        self.CTYPE2 = h['CTYPE2']
+        self.CRPIX1 = float(h['CRPIX1'])
+        self.CRPIX2 = float(h['CRPIX2'])
+        self.CRVAL1 = float(h['CRVAL1'])
+        self.CRVAL2 = float(h['CRVAL2'])
 
-        self.CRVAL1 = float(header['CRVAL1'])
-        self.CRVAL2 = float(header['CRVAL2'])
         self.sky_angle()
         self.sky_scale()
 
@@ -84,9 +101,9 @@ class WCS:
             f"  'CRPIX2': {self.CRPIX2!r},\n"
             f"  'CRVAL1': {self.CRVAL1!r},\n"
             f"  'CRVAL2': {self.CRVAL2!r},\n"
-            f"  'CROTA2': {getattr(self, 'CROTA2', None)!r},\n"
-            f"  'CDELT1': {getattr(self, 'CDELT1', None)!r},\n"
-            f"  'CDELT2': {getattr(self, 'CDELT2', None)!r}\n"
+            f"  'CROTA2': {self.CROTA2!r},\n"
+            f"  'CDELT1': {self.CDELT1!r},\n"
+            f"  'CDELT2': {self.CDELT2!r}\n"
             "}"
         )
 
@@ -94,61 +111,24 @@ class WCS:
         return f"{self.__class__.__name__}({self.WCS})"
 
     def sky_angle(self):
-        """
-        Get the angle of the sky in degrees
-        To retrieve in radians, use radians(sky_angle())
-        Sets CROTA2 for future refrence
-        """
         self.CROTA2 = degrees(atan2(self.CD2_1, self.CD1_1))
-        assert hasattr(self, 'CROTA2'), "CROTA2 not set"
         return self.CROTA2
-    
+
     def sky_scale(self):
-        """
-        Get the scale of the sky in degrees per pixel
-        To retrieve in arcseconds per pixel, multiply by 3600
-        Sets CROTA2, CDELT1 and CDELT2 for future refrence
-        """
         if not hasattr(self, 'CROTA2'):
             self.sky_angle()
-
-        self.CDELT1 = self.CD1_1/cos(radians(self.CROTA2))
-        self.CDELT2 = self.CD2_2/cos(radians(self.CROTA2))
-        assert hasattr(self, 'CDELT1'), "CDELT1 not set"
-        assert hasattr(self, 'CDELT2'), "CDELT2 not set"
-
+        self.CDELT1 = self.CD1_1 / cos(radians(self.CROTA2))
+        self.CDELT2 = self.CD2_2 / cos(radians(self.CROTA2))
         return self.CDELT1, self.CDELT2
-    
-    def world_to_pixel(self, RA:float, Dec:float):
-        """
-        Convert RA, Dec to pixel coordinates.
-        Uses the WCS formula: pixel = (coord - CRVAL) / CDELT + CRPIX
 
-        Parameters:
-            RA (float): The RA/longitude of the target in degrees
-            DEC (float): The DEC/latitude of the target in degrees
-        
-        Returns:
-            tuple[float]: the pixel coordinate of the cooresponding RA/DEC as (x,y)
-        """
-        delta_world = np.array([RA-self.CRVAL1, Dec-self.CRVAL2])
+    def world_to_pixel(self, RA: float, Dec: float):
+        delta_world = np.array([RA - self.CRVAL1, Dec - self.CRVAL2])
         CD_inv = np.linalg.inv(np.array(self.WCS))
         delta_pix = CD_inv @ delta_world
         pixel_coords = delta_pix + np.array([self.CRPIX1, self.CRPIX2])
         return pixel_coords[0], pixel_coords[1]
-    
-    def pixel_to_world(self, Pixel_x: float, Pixel_y:float): 
-        """
-        Convert Pixel coordinates to RA,DEC based on wcs
-        Inverse of world_to_pixel
 
-        Parameters:
-            Pixel_x (float): the x coordinate in the image
-            Pixel_y (float): the y coordinate in the image
-
-        Returns: 
-            tuple[float]: the (RA, DEC) of the pixel coordinate
-        """
+    def pixel_to_world(self, Pixel_x: float, Pixel_y: float):
         delta_pix = np.array([Pixel_x - self.CRPIX1, Pixel_y - self.CRPIX2])
         CD = np.array(self.WCS)
         delta_world = CD @ delta_pix
