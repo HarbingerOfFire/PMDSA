@@ -51,5 +51,4 @@ If you use this code for the analysis of your code, please include the following
 >>Analysis used in this publication was assissted in whole or part by PMDSA  provided by HarbingerOfFire on github (https://github.com/harbingeroffire/PMDSA)
 
 Past works include:
-
-Syfrett et. Al.  "Comparative Analysis of Two Astrometric Measuring Methods on Five Known Binaries"  *Journal of Double Star Observations* Pending Publishing, April 30th. 2025.
+>Syfrett, Malachi, et al. View of Comparative Analysis of Two Astrometric Measuring Methods on Five Known Binaries. Journal of Double Star Observations, 13 July, 2025, doublestarsjournal.org/index.php/jdso/article/view/89/32.
